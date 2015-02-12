@@ -1,0 +1,133 @@
+<html>
+<head>
+    <title>Indicator (beta 1.4)</title>
+	<link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico">
+    <link rel="stylesheet" type="text/css" href="extjs/resources/ext-theme-classic/ext-theme-classic-all.css">
+	<link rel="stylesheet" href="extjs/example.css">
+	<link rel="stylesheet" type="text/css" href="css/ol.css">
+	
+	<script type="text/javascript" src="lib/initGlobals.js"></script>
+    <script type="text/javascript" src="extjs/ext-all-debug.js"></script>
+	<script type="text/javascript" src="extjs/examples.js"></script>
+	<script type="text/javascript" src="thirdparty/proj4js-min.js"></script>
+	<script type="text/javascript" src="thirdparty/json2.js"></script>
+	<script type="text/javascript" src="thirdparty/moment.js"></script>
+	<script type="text/javascript" src="thirdparty/Colour.compressed.js"></script>
+	<script type="text/javascript" src="app.js"></script>
+	<script type="text/javascript" src="lib/messageHelper.js"></script>
+	<script type="text/javascript" src="lib/utilHelper.js"></script>
+	<script type="text/javascript" src="lib/olHelper.js"></script>
+	<script type="text/javascript" src="thirdparty/ol.js"></script>
+	<script type="text/javascript" src="app/view/createIOPParamWin.js"></script>
+	<script type="text/javascript" src="app/view/createISAParamWin.js"></script>
+	<script type="text/javascript" src="app/view/createIIAParamWin.js"></script>
+	
+	    <style type="text/css">
+		.fullWindow {
+			position: absolute;
+			top: 0;
+			left: 0;
+			height: 100%;
+			width: 100%;
+			margin: 0;
+			overflow: hidden;
+			padding: 0;
+			font-family: sans-serif;
+		}
+    	.x-grid-center-icon{
+		   display:block; 
+		   margin:0 auto; 
+		   text-align:center;
+		   cursor: pointer;
+		}
+		.line-through{
+			text-decoration:line-through;
+		}
+        /* style rows on mouseover */
+        .x-grid-row-over .x-grid-cell-inner {
+            font-weight: normal; //bold
+        }
+        
+.layer-visible{background-image: url(images/tick-icon.png);}
+.layer-hidden{background-image: url(images/tick-icon-disabled.png);}
+.layer-remove-enabled{background-image: url(images/remove-icon.png);}
+.layer-remove-disabled{background-image: url(images/remove-icon-disabled.png);}
+.layer-up-enabled{background-image: url(images/up-icon.png);}
+.layer-up-disabled{background-image: url(images/up-icon-disabled.png);}
+.layer-down-enabled{background-image: url(images/down-icon.png);}
+.layer-down-disabled{background-image: url(images/down-icon-disabled.png);}
+.layer-config{background-image: url(images/cog.png);}
+.analysis-icon-enabled{background-image: url(images/analysis-icon-enabled.png);}
+.analysis-icon-disabled{background-image: url(images/analysis-icon-disabled.png);}
+.download-icon-enabled{background-image: url(images/download-icon-enabled.png);}
+.download-icon-disabled{background-image: url(images/download-icon-disabled.png);}
+.pin-place{background-image: url(images/pin-place-icon.png); background-size:16px 16px; background-repeat:no-repeat;}
+.pin-place-disabled{background-image: url(images/pin-place-disabled.png); background-size:16px 16px; background-repeat:no-repeat;}
+
+.sim-run{background-image: url(images/sim-run-icon.png); background-size:16px 16px; background-repeat:no-repeat;}
+.sim-run-disabled{background-image: url(images/sim-run-icon-disabled.png); background-size:16px 16px; background-repeat:no-repeat;}
+.sim-processing{background-image: url(images/processing.gif); background-size:16px 16px; background-repeat:no-repeat;}
+.sim-stop{background-image: url(images/sim-stop-icon.png); background-size:16px 16px; background-repeat:no-repeat;}
+.sim-pause{background-image: url(images/sim-pause-icon.png); background-size:16px 16px; background-repeat:no-repeat;}
+.sim-reload{background-image: url(images/sim-reload-icon.png); background-size:16px 16px; background-repeat:no-repeat;}
+.sim-warning{background-image: url(images/sim-warning-icon.png); background-size:16px 16px; background-repeat:no-repeat;}
+.sim-success-enabled{background-image: url(images/sim-success-icon-enabled.png); background-size:16px 16px; background-repeat:no-repeat;}
+.sim-success-disabled{background-image: url(images/sim-success-icon-disabled.png); background-size:16px 16px; background-repeat:no-repeat;}
+.sim-delete{background-image: url(images/sim-delete-icon.png); background-size:16px 16px; background-repeat:no-repeat;}
+.sim-bbox-enabled{background-image: url(images/bbox-icon.png); background-size:16px 16px; background-repeat:no-repeat;}
+.sim-bbox-disabled{background-image: url(images/bbox-icon-disabled.png); background-size:16px 16px; background-repeat:no-repeat;}
+.sim-path-analysis{background-image: url(images/marker-icon.png); background-size:16px 16px; background-repeat:no-repeat;}
+
+
+.sim-params{background-image: url(images/params-icon.png); background-size:16px 16px; background-repeat:no-repeat;}
+.iddss-viewerInfoButton {
+    display: inline-block;
+    position: relative;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+	margin:5px;
+}
+
+.iddss-viewerInfoButton-small {
+    display: inline-block;
+    position: relative;
+    width: 5px;
+    height: 5px;
+    cursor: pointer;
+	margin:5px;
+}
+
+.iddss-addButton {
+	background-image: url(images/remove-icon.png);
+	background-repeat: no-repeat;
+}
+
+.iddss-imgButtonCls {
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
+}
+.iddss-simDisplayWindowCls {
+	background: transparent;
+	background-image: url(images/window-bg.png);
+}
+.cell-color-FF0000{background-color : #FF0000 !important}
+.cell-color-FFD700{background-color : #FFD700 !important}
+.cell-color-228B22{background-color : #228B22 !important}
+.cell-color-1E90FF{background-color : #1E90FF !important}
+.cell-color-A9A9A9{background-color : #A9A9A9 !important}
+.cell-color-FFFFFF{background-color : #FFFFFF !important}
+
+.cell-bold{
+	background-color:#FFFFFF !important;
+	font-weight:bold;	
+}
+
+    </style>
+</head>
+
+<body onload="initMainScene();">
+</body>
+<script type="text/javascript" src="lib/initMainScene.js"></script>
+</html>

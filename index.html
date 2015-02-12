@@ -1,0 +1,106 @@
+<html>
+<head>
+    <title>Indicator (beta 1.4)</title>
+	<link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico">
+    <link rel="stylesheet" type="text/css" href="extjs/resources/ext-theme-classic/ext-theme-classic-all.css">
+	<link rel="stylesheet" href="extjs/example.css">
+	<link rel="stylesheet" type="text/css" href="css/ol.css">
+
+	<script type="text/javascript" src="lib/initGlobals.js"></script>
+    <script type="text/javascript" src="extjs/ext-all-debug.js"></script>
+	<script type="text/javascript" src="extjs/examples.js"></script>
+	<script type="text/javascript" src="lib/messageHelper.js"></script>
+	
+	<style>
+
+body {
+	padding-top: 20px;
+	padding-bottom: 40px;
+}
+
+</style>
+
+</head>
+
+<body style="background-color: #ffffff;">
+ <div style="text-align:left; width:910px; height:140px; margin-left:auto; margin-right:auto; margin-top:200;">
+	<a href="http://aurin.org.au/" style="margin:10px"><img src="./images/aurin-logo.png"  border="0" alt="AURIN" /></a>
+	<a href="http://www.melbourne.vic.gov.au/" style="margin:10px"><img src="./images/startup_melbcity_logo.png"  border="0"  height="110" alt="City of Melbourne" /></a>
+	<a href="http://www.csdila.unimelb.edu.au/" style="margin:10px"><img src="./images/csdila_logo_full.png" border="0"  alt="CSDILA" /></a>
+	<a href="http://www.vic.gov.au/" style="margin:10px"><img src="./images/victoria.png"  border="0"  alt="Victoria Goverment" /></a>	 
+ </div> 
+
+<div id='login-panel' style="width:910px; height:200px; margin-left:auto; margin-right:auto; margin-top:100;"></div>
+
+<script type="text/javascript">
+		Ext.create('Ext.form.Panel', {
+		layout : 'column',
+		border: false,
+		bodyStyle: 'background:transparent;',
+		renderTo: 'login-panel',
+    items: [{
+        xtype: 'textfield',
+		fieldLabel:'<span style="color:#000000; font-size:16px;">USERNAME</span>',
+		labelAlign:'right',
+		id :'txtUserNameID',
+		value: '',
+		margin: '5, 20, 0, 0'
+    }, {
+        xtype: 'textfield',
+		fieldLabel:'<span style="color:#000000; font-size:16px;">PASSWORD</span>',
+		labelAlign:'right',
+		id :'txtPswdID',
+		margin: '5, 20, 0, 0',
+		inputType:'password',
+		value: '',
+		listeners:{  
+        scope:this,  
+        specialkey: function(f,e){  
+            if(e.getKey()==e.ENTER){
+                Ext.getCmp("btnLoginID").handler();
+            }  
+        }  
+    }  
+    },
+	{xtype: 'button',
+		text : 'Login',
+		id: 'btnLoginID',
+		margin: '5, 20, 0, 0',
+		handler: function() {
+			console.log("login request");
+			if(typeof Ext.getCmp("txtUserNameID").value === "undefined" || Ext.getCmp("txtUserNameID").value.trim()=="" || typeof Ext.getCmp("txtPswdID").value === "undefined" || Ext.getCmp("txtPswdID").value.trim()==""){
+				messageHelper.showErrorWait("Empty username and password.", 1000);
+				return;
+			}
+			
+			Ext.Ajax.request({
+				   url: SERVICE_URL.dologin,
+				   withCredentials:true,
+				   timeout: 1000*60*60,
+				   method:'POST',
+				   params: {"username":Ext.getCmp("txtUserNameID").value.trim(), "userpswd":Ext.getCmp("txtPswdID").value.trim()},
+				   success: function(response, opts) {
+				   
+						var obj = Ext.decode(response.responseText);
+						testObj = obj;
+						if(obj.status == "ok"){
+							window.location.href = "./main.html";
+						}else
+						{
+							messageHelper.showErrorWait("Wrong username and password.", 1000);
+						}
+
+				   },
+				   failure: function(response, opts) {
+						messageHelper.showErrorWait("Server exception. Try again later", 1000);
+				   }
+				});
+		}
+	}
+	]
+});
+</script>
+
+</body>
+
+</html>
